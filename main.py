@@ -9,9 +9,20 @@ import inspect
 
 from llm_processing_md.sync_md_to_json_ollama import mmd_to_json
 
+
+def get_ollama_url():
+    """
+    Get Ollama URL from environment variable or use default.
+    Constructs the full API endpoint from OLLAMA_HOST.
+    """
+    ollama_host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+    # Ensure the URL ends without /api/generate to avoid duplication
+    base_url = ollama_host.rstrip('/')
+    return f"{base_url}/api/generate"
+
 def run_pipeline(input_pdf: str, output_dir: str,
                  model: str = "deepseek-r1:8b",
-                 ollama_url: str = "http://localhost:11434/api/generate",
+                 ollama_url: str = None,
                  chunk_size: int = 2000) -> str:
     """
     End-to-end processing pipeline:
@@ -33,6 +44,11 @@ def run_pipeline(input_pdf: str, output_dir: str,
         raise FileNotFoundError(f"PDF not found: {input_pdf}")
 
     os.makedirs(output_dir, exist_ok=True)
+
+    # Get Ollama URL from environment if not provided
+    if ollama_url is None:
+        ollama_url = get_ollama_url()
+        print(f"Using Ollama URL: {ollama_url}")
 
     pdf_name   = os.path.basename(input_pdf)          # e.g. "report.pdf"
     stem       = os.path.splitext(pdf_name)[0]        # e.g. "report"
@@ -138,9 +154,7 @@ def _build_parser() -> argparse.ArgumentParser:
     p.add_argument("--output_dir", default="output/",help="Directory for all outputs")
     p.add_argument("--model",default="deepseek-r1:8b",
                    help="Ollama model for MMD→JSON step")
-    # p.add_argument("--model",default="deepseek-r1:1.5b",
-    #                help="Ollama model for MMD→JSON step")
-    p.add_argument("--ollama-url", default="http://localhost:11434/api/generate",
+    p.add_argument("--ollama-url", default=None,
                    help="Ollama API endpoint")
     p.add_argument("--chunk-size", default=3000, type=int,
                    help="Text chunk size for LLM processing")

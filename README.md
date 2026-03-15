@@ -1,6 +1,6 @@
 # JEE_rankup_OCR
 
-A PDF OCR pipeline for processing JEE (Joint Entrance Examination) physics exam papers. Converts PDF documents to structured JSON with question parsing.
+A PDF OCR pipeline for processing JEE (Joint Entrance Examination) exam papers. Converts PDF documents to structured JSON with question parsing.
 
 ## Pipeline
 
@@ -156,6 +156,20 @@ Launch the Streamlit web app:
 ```bash
 streamlit run streamlit_app.py --server.address 0.0.0.0 --server.port 8501
 ```
+
+### Docker Usage
+
+Build the docker container:
+```bash
+docker compose up -d --build
+```
+
+Run the pipeline:
+```bash
+docker exec -it jee-ocr-app bash
+python main.py --input_pdf <path_to_pdf> --output_dir <path_to_output_dir>
+```
+
 
 ## Output Format
 
