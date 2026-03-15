@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  ocr-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jee-ocr:latest
+    container_name: jee-ocr-app
+    network_mode: host
+    runtime: nvidia
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - OLLAMA_HOST=http://localhost:11434
+      - MODEL_PATH=deepseek-ai/DeepSeek-OCR-2
+      - MAX_CONCURRENCY=10
+      - CROP_MODE=true
+    volumes:
+      - .:/app
