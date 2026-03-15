@@ -7,7 +7,7 @@ import shutil
 import asyncio
 import inspect
 
-from llm_processing_md.sync_md_to_json_ollama import mmd_to_json
+from llm_processing_md.async_md_to_json_ollama import mmd_to_json
 
 
 def get_ollama_url():
