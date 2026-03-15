@@ -1,0 +1,26 @@
+# Core dependencies
+transformers==4.46.3
+tokenizers==0.20.3
+
+# PDF and image processing
+PyMuPDF>=1.23.0
+img2pdf>=0.5.0
+Pillow>=10.0.0
+numpy>=1.24.0
+
+# OCR processing
+einops>=0.7.0
+easydict>=1.10
+addict>=2.4.0
+
+# LLM processing
+langchain-text-splitters>=0.3.1
+json-repair>=0.25.0
+
+# Web interface
+streamlit>=1.30.0
+
+# Utilities
+aiohttp>=3.9.0
+requests>=2.31.0
+tqdm>=4.66.0
