@@ -333,7 +333,7 @@ class DeepseekOCR2ForCausalLM(nn.Module, SupportsMultiModal, SupportsPP):
         
 
 
-        self.sam_model.to(dtype=torch.bfloat16)
+        self.sam_model.to(dtype=torch.float16)
 
 
 
@@ -386,7 +386,7 @@ class DeepseekOCR2ForCausalLM(nn.Module, SupportsMultiModal, SupportsPP):
         with torch.no_grad():
             for jdx in range(images_spatial_crop.size(0)):
                 # with torch.set_grad_enabled(False):
-                patches = images_crop[jdx][0].to(torch.bfloat16) # batch_size = 1
+                patches = images_crop[jdx][0].to(torch.float16) # batch_size = 1
                 # patches = images_crop[jdx][0]
                 image_ori = pixel_values[jdx]
                 crop_shape = images_spatial_crop[jdx][0]
@@ -475,9 +475,9 @@ class DeepseekOCR2ForCausalLM(nn.Module, SupportsMultiModal, SupportsPP):
 
         # image_input: [pixel_values, images_crop, images_spatial_crop]
     
-        pixel_values = image_input[0].to(torch.bfloat16)
+        pixel_values = image_input[0].to(torch.float16)
 
-        # images_crop = image_input[1].to(torch.bfloat16)
+        # images_crop = image_input[1].to(torch.float16)
         images_crop = image_input[1]
         # images_crop = image_input[1]
         images_spatial_crop = image_input[2].to(dtype=torch.long)
@@ -511,12 +511,12 @@ class DeepseekOCR2ForCausalLM(nn.Module, SupportsMultiModal, SupportsPP):
 
 
         inputs_embeds = self.language_model.get_input_embeddings(input_ids)
-        # input_ids.to(torch.bfloat16)
-        # self.image_token_id.to(torch.bfloat16)
+        # input_ids.to(torch.float16)
+        # self.image_token_id.to(torch.float16)
 
         if multimodal_embeddings is not None:
-            # multimodal_embeddings = multimodal_embeddings.to(torch.bfloat16)
-            # multimodal_embeddings = [emb.to(torch.bfloat16) for emb in multimodal_embeddings]
+            # multimodal_embeddings = multimodal_embeddings.to(torch.float16)
+            # multimodal_embeddings = [emb.to(torch.float16) for emb in multimodal_embeddings]
             inputs_embeds = merge_multimodal_embeddings(
                 input_ids, inputs_embeds, multimodal_embeddings,
                 self.image_token_id)
@@ -567,7 +567,7 @@ class DeepseekOCR2ForCausalLM(nn.Module, SupportsMultiModal, SupportsPP):
             else:
                 new_name = 'language.' + name
             
-            # tensor = tensor.to(torch.bfloat16)
+            # tensor = tensor.to(torch.float16)
 
             processed_weights.append((new_name, tensor))
         
