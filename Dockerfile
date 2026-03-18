@@ -70,4 +70,7 @@ COPY . /app/
 RUN python -c "from transformers import AutoTokenizer; AutoTokenizer.from_pretrained('${MODEL_PATH}', trust_remote_code=True)"
 
 # Default command - keep container running for interactive use
-CMD ["tail", "-f", "/dev/null"]
+# CMD ["tail", "-f", "/dev/null"]
+
+# Command to run the app
+ENTRYPOINT ["python3", "main.py"]
