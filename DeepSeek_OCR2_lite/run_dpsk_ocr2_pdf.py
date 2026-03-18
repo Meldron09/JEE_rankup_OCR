@@ -45,7 +45,7 @@ def get_llm():
         _llm = LLM(
                 model=MODEL_PATH,
                 hf_overrides={"architectures": ["DeepseekOCR2ForCausalLM"]},
-                dtype="float16"
+                dtype="float16",
                 block_size=32,
                 enforce_eager=True,
                 trust_remote_code=True, 
