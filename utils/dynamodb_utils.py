@@ -3,6 +3,7 @@ from botocore.exceptions import ClientError
 import os
 from dotenv import load_dotenv
 from utils.helpers import Colors
+from typing import Optional
 
 load_dotenv()
 
@@ -13,7 +14,7 @@ dynamodb = boto3.resource(
     aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
 )
 
-def update_task_completed(table_name: str, task_id: str, output_s3_key: str):
+def update_task_status(table_name: str, task_id: str, status: str, output_s3_key: Optional[str]):
     """
     Update the DynamoDB task record to COMPLETED and record the output S3 key.
  
@@ -36,7 +37,7 @@ def update_task_completed(table_name: str, task_id: str, output_s3_key: str):
                     UpdateExpression="SET #s = :s, output_s3_key = :o",
                     ExpressionAttributeNames={"#s": "status"},
                     ExpressionAttributeValues={
-                        ":s": "COMPLETED",
+                        ":s": status,
                         ":o": output_s3_key,
                     },
                     ConditionExpression="attribute_exists(task_id)"

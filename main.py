@@ -12,7 +12,7 @@ from botocore.exceptions import NoCredentialsError, ClientError
 from dotenv import load_dotenv
 
 from llm_processing_md.async_md_to_json_ollama import mmd_to_json
-from utils.dynamodb_utils import update_task_completed
+from utils.dynamodb_utils import update_task_status
 from utils.s3_utils import upload_folder, download_file
 from utils.helpers import Colors, get_ollama_url, cleanup_ollama
 
@@ -176,10 +176,14 @@ def run_s3_pipeline(
 
         # ── Step 4: Mark task as COMPLETED in DynamoDB ───────────────────────
         output_s3_key = f"{s3_output_prefix}/{stem}"
-        update_task_completed(table_name=table_name, task_id=task_id, output_s3_key=output_s3_key)
+        update_task_status(table_name=table_name, task_id=task_id, status="COMPLETED", output_s3_key=output_s3_key)
  
         print(f"\n{Colors.GREEN}✅ S3 pipeline complete for '{pdf_filename}'.{Colors.RESET}")
 
+    except Exception as e:
+        print(f"\n{Colors.RED}❌ S3 pipeline failed for '{pdf_filename}'.{Colors.RESET}")
+        update_task_status(table_name=table_name, task_id=task_id, status="FAILED", output_s3_key=None)
+        
     finally:
         # ── Step 4: Clean up local directories (always runs) ─────────────────
         print(f"\n{Colors.YELLOW}Cleaning up local directories...{Colors.RESET}")
