@@ -8,7 +8,8 @@ from .prompt import PROMPT
 def mmd_to_json(mmd_path: str, output_json_path: str,
                 model: str = "deepseek-r1:8b",
                 ollama_url: str = "http://localhost:11434/api/generate",
-                chunk_size: int = 3000):
+                chunk_size: int = 3000,
+                prompt: str = None):
     """
     Convert a .mmd OCR output file into structured JSON using an LLM.
 
@@ -18,7 +19,10 @@ def mmd_to_json(mmd_path: str, output_json_path: str,
         model (str): Ollama model name
         ollama_url (str): Ollama API endpoint
         chunk_size (int): text chunk size for LLM processing
+        prompt (str): custom LLM prompt; uses default PROMPT if None
     """
+    if prompt is None:
+        prompt = PROMPT
 
     # Load MMD file
     with open(mmd_path, "r", encoding="utf-8") as f:
@@ -41,7 +45,7 @@ def mmd_to_json(mmd_path: str, output_json_path: str,
 
         payload = {
             "model": model,
-            "prompt": PROMPT.format(CHUNK_CONTENT=chunk),
+            "prompt": prompt.format(CHUNK_CONTENT=chunk),
             "stream": False
         }
 

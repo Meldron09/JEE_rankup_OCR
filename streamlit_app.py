@@ -20,6 +20,7 @@ import streamlit as st
 import inspect
 
 from llm_processing_md.sync_md_to_json_ollama import mmd_to_json
+from llm_processing_md.prompt import PROMPT as DEFAULT_LLM_PROMPT
 
 import asyncio
 
@@ -198,7 +199,8 @@ def run_full_pipeline(
     original_name: str,
     model: str = "deepseek-r1:8b",
     ollama_url: str = "http://localhost:11434/api/generate",
-    chunk_size: int = 2000
+    chunk_size: int = 2000,
+    llm_prompt: str = None,
 ):
     """
     Run the full pipeline: PDF → .mmd → .json → .xlsx
@@ -240,6 +242,7 @@ def run_full_pipeline(
         model=model,
         ollama_url=ollama_url,
         chunk_size=chunk_size,
+        prompt=llm_prompt,
     )
     # Handle both async and sync implementations of mmd_to_json
     if inspect.isawaitable(result):
@@ -271,6 +274,12 @@ def main():
     )
 
     output_dir = st.sidebar.text_input("Output Directory", value=DEFAULT_OUTPUT_DIR)
+
+    llm_prompt = st.sidebar.text_area(
+        "LLM Parsing Prompt",
+        value=DEFAULT_LLM_PROMPT,
+        height=300,
+    )
 
     # File uploader
     uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
@@ -314,7 +323,8 @@ def main():
                         original_name=uploaded_file.name,
                         model=model,
                         ollama_url="http://localhost:11434/api/generate",
-                        chunk_size=5000
+                        chunk_size=5000,
+                        llm_prompt=llm_prompt,
                     )
 
                     st.balloons()
