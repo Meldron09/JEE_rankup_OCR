@@ -52,7 +52,7 @@ def get_llm():
                 swap_space=0,
                 max_num_seqs=MAX_CONCURRENCY,
                 tensor_parallel_size=1,
-                gpu_memory_utilization=0.8,
+                gpu_memory_utilization=0.5,
                 disable_mm_preprocessor_cache=True
             )
         logits_processors = [NoRepeatNGramLogitsProcessor(ngram_size=20, window_size=50, whitelist_token_ids= {128821, 128822})]
